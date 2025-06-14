@@ -2,6 +2,8 @@ import React, { Suspense, lazy } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabNavigator from "../BottomTab/BottomTabNavigator.js";
+import { useAuth } from "../../Context/auth.context.js";
+import LoginScreen from "../../Screens/Auth/LoginScreen.js";
 
 // Lazy load the screens
 const EmployeeStack = lazy(() => import("../Stack/EmployeeStack/EmployeeStack.js"));
@@ -23,12 +25,13 @@ const ServiceScreen = lazy(() => import("../../Screens/Service/ServiceScreen.js"
 const ContactUsScreen = lazy(() => import("../../Screens/ContactUs/ContactUsScreen.js"));
 const AboutUsScreen = lazy(() => import("../../Screens/AboutUs/AboutUsScreen.js"));
 const HelpScreen = lazy(() => import("../../Screens/Help/HelpScreen.js"));
-const LoginScreen = lazy(() => import("../../Screens/Auth/LoginScreen.js"));
 const LogoutScreen = lazy(() => import("../../Screens/Auth/LogoutScreen.js"));
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
+  const { isLoggedIn } = useAuth();
+
   return (
     <Suspense
       fallback={
@@ -43,28 +46,35 @@ const DrawerNavigator = () => {
           gestureEnabled: false,
           swipeEnabled: false,
         }}>
-        <Drawer.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
-        <Drawer.Screen name="EmployeeStack" component={EmployeeStack} />
-        <Drawer.Screen name="HolidayStack" component={HolidayStack} />
-        <Drawer.Screen name="SettingsStack" component={SettingsStack} />
-        <Drawer.Screen name="LeaveBalance" component={LeaveBalance} />
-        <Drawer.Screen name="AddWorkSummary" component={AddWorkSummary} />
-        <Drawer.Screen name="SalarySlip" component={SalarySlip} />
-        <Drawer.Screen name="ApplyLeaveRequest" component={ApplyLeaveRequestScreen} />
-        <Drawer.Screen name="MyAttendance" component={MyAttendanceScreen} />
-        <Drawer.Screen name="ApplyMissedPunchOut" component={ApplyMissedPunchOut} />
-        <Drawer.Screen name="ApplyLatePunchIn" component={ApplyLatePunchIn} />
-        <Drawer.Screen name="ApplyCompOff" component={ApplyCompOff} />
-        <Drawer.Screen name="ProjectStack" component={ProjectStack} />
-        <Drawer.Screen name="TaxInvoice" component={TaxInvoice} />
-        <Drawer.Screen name="ProformaInvoice" component={ProformaInvoice} />
-        <Drawer.Screen name="TicketStack" component={TicketStack} />
-        <Drawer.Screen name="Service" component={ServiceScreen} />
-        <Drawer.Screen name="About" component={AboutUsScreen} />
-        <Drawer.Screen name="Contact" component={ContactUsScreen} />
-        <Drawer.Screen name="Help" component={HelpScreen} />
-        <Drawer.Screen name="Login" component={LoginScreen} />
-        <Drawer.Screen name="Logout" component={LogoutScreen} />
+        {
+          (!isLoggedIn) ? (
+            <Drawer.Screen name="Login" component={LoginScreen} />
+          ) : (
+            <>
+              <Drawer.Screen name="BottomTabNavigator" component={BottomTabNavigator} />
+              <Drawer.Screen name="EmployeeStack" component={EmployeeStack} />
+              <Drawer.Screen name="HolidayStack" component={HolidayStack} />
+              <Drawer.Screen name="SettingsStack" component={SettingsStack} />
+              <Drawer.Screen name="LeaveBalance" component={LeaveBalance} />
+              <Drawer.Screen name="AddWorkSummary" component={AddWorkSummary} />
+              <Drawer.Screen name="SalarySlip" component={SalarySlip} />
+              <Drawer.Screen name="ApplyLeaveRequest" component={ApplyLeaveRequestScreen} />
+              <Drawer.Screen name="MyAttendance" component={MyAttendanceScreen} />
+              <Drawer.Screen name="ApplyMissedPunchOut" component={ApplyMissedPunchOut} />
+              <Drawer.Screen name="ApplyLatePunchIn" component={ApplyLatePunchIn} />
+              <Drawer.Screen name="ApplyCompOff" component={ApplyCompOff} />
+              <Drawer.Screen name="ProjectStack" component={ProjectStack} />
+              <Drawer.Screen name="TaxInvoice" component={TaxInvoice} />
+              <Drawer.Screen name="ProformaInvoice" component={ProformaInvoice} />
+              <Drawer.Screen name="TicketStack" component={TicketStack} />
+              <Drawer.Screen name="Service" component={ServiceScreen} />
+              <Drawer.Screen name="About" component={AboutUsScreen} />
+              <Drawer.Screen name="Contact" component={ContactUsScreen} />
+              <Drawer.Screen name="Help" component={HelpScreen} />
+              <Drawer.Screen name="Logout" component={LogoutScreen} />
+            </>
+          )
+        }
       </Drawer.Navigator>
     </Suspense>
   );
