@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "659611997164",
+    "project_id": "code-diffusion-attendance",
+    "storage_bucket": "code-diffusion-attendance.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:659611997164:android:ebbd9656061bf47b0b26c9",
+        "android_client_info": {
+          "package_name": "com.cdtsportal"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCLKx5qI3XitGANqa7wIBUuz6bYqQaj2EY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
