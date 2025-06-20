@@ -44,7 +44,7 @@ const CustomDrawerNavigator = ({ navigation }) => {
     {
       label: "Leave Balance",
       icon: "wallet-outline",
-      route: "LeaveBalance",
+      route: "LeaveBalanceStack",
       show: fieldPermissions?.leaveBalance?.show,
     },
     {
