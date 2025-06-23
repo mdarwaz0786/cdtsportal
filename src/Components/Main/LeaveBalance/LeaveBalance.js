@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../../Context/auth.context.js';
+import { useRefresh } from "../../../Context/refresh.context.js";
 import { API_BASE_URL } from "@env";
 import axios from 'axios';
 import formatDate from './formatDate.js';
@@ -24,13 +25,15 @@ const LeaveBalance = () => {
   const { team, validToken } = useAuth();
   const [leave, setLeave] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [employeeId, setEmployeeId] = useState(team?._id);
   const [recentRequests, setRecentRequests] = useState([]);
   const navigation = useNavigation();
+  const { refreshKey, refreshPage } = useRefresh();
 
   useEffect(() => {
     if (team) {
-      setEmployeeId(team._id);
+      setEmployeeId(team?._id);
     };
   }, [team]);
 
@@ -65,6 +68,7 @@ const LeaveBalance = () => {
       console.log("Error:", error.message);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     };
   };
 
@@ -73,19 +77,16 @@ const LeaveBalance = () => {
       fetchLeaveBalance(employeeId);
       fetchLeaveApproval(employeeId);
     };
-  }, [employeeId]);
+  }, [employeeId, refreshKey]);
 
   const circleSize = 90;
   const total = leave?.totalEntitled || 1;
   const remaining = leave?.balance < 0 ? 0 : leave?.balance;
   const degree = (remaining / total) * 360;
 
-  if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#ffb300" />
-      </View>
-    );
+  const handleRefresh = () => {
+    setRefreshing(true);
+    refreshPage();
   };
 
   return (
@@ -100,69 +101,87 @@ const LeaveBalance = () => {
         <Text style={styles.headerTitle}>Leave Dashboard</Text>
       </View>
 
-      <View style={styles.container}>
-        <View style={styles.card}>
-          <View style={styles.circleContainer}>
-            <View style={[styles.progressWrapper, { width: circleSize, height: circleSize }]}>
-              <View style={[
-                styles.backgroundCircle,
-                { width: circleSize, height: circleSize, borderRadius: circleSize / 2 }
-              ]} />
-              <View style={[
-                styles.progressSlice,
-                {
-                  width: circleSize,
-                  height: circleSize,
-                  borderRadius: circleSize / 2,
-                  transform: [{ rotate: `${degree}deg` }],
-                }
-              ]} />
-              <View style={[
-                styles.innerCircle,
-                {
-                  width: circleSize - 30,
-                  height: circleSize - 30,
-                  borderRadius: (circleSize - 30) / 2
-                }
-              ]}>
-                <Text style={styles.remainingText}>{leave?.balance}</Text>
+      {
+        loading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#ffb300" />
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <View style={styles.card}>
+              <View style={styles.circleContainer}>
+                <View style={[styles.progressWrapper, { width: circleSize, height: circleSize }]}>
+                  <View style={[
+                    styles.backgroundCircle,
+                    { width: circleSize, height: circleSize, borderRadius: circleSize / 2 }
+                  ]} />
+                  <View style={[
+                    styles.progressSlice,
+                    {
+                      width: circleSize,
+                      height: circleSize,
+                      borderRadius: circleSize / 2,
+                      transform: [{ rotate: `${degree}deg` }],
+                    }
+                  ]} />
+                  <View style={[
+                    styles.innerCircle,
+                    {
+                      width: circleSize - 30,
+                      height: circleSize - 30,
+                      borderRadius: (circleSize - 30) / 2
+                    }
+                  ]}>
+                    <Text style={styles.remainingText}>{leave?.balance}</Text>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.stats}>
+                <Text style={styles.balanceLabel}>Leave Balance</Text>
+                <Text style={[styles.statsText, { marginBottom: 1 }]}>Used   {leave?.totalTaken}</Text>
+                <Text style={styles.statsText}>Remaining    {leave?.balance}</Text>
               </View>
             </View>
-          </View>
 
-          <View style={styles.stats}>
-            <Text style={styles.balanceLabel}>Leave Balance</Text>
-            <Text style={[styles.statsText, { marginBottom: 1 }]}>Used   {leave?.totalTaken}</Text>
-            <Text style={styles.statsText}>Remaining    {leave?.balance}</Text>
-          </View>
-        </View>
-
-        <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.navigate("LeaveApply")}>
-            <Text style={styles.buttonText}>Apply Leave</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.buttonSecondary} onPress={() => navigation.navigate("LeaveLedger")}>
-            <Text style={styles.buttonTextSecondary}>View Ledger</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Text style={styles.subHeading}>Recent Requests</Text>
-        <FlatList
-          data={recentRequests}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.requestItem}>
-              <View>
-                <Text style={styles.dateText}>{formatDate(item?.startDate)} To {formatDate(item?.endDate)}</Text>
-                <Text numberOfLines={1} ellipsizeMode="tail">
-                  {(item?.reason || '').length > 40 ? item?.reason.slice(0, 40) + '...' : item?.reason}
-                </Text>
-              </View>
-              <Text style={[styles.statusText, getStatusStyle(item?.leaveStatus)]}>{item?.leaveStatus}</Text>
+            <View style={styles.buttonRow}>
+              <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.navigate("LeaveApply")}>
+                <Text style={styles.buttonText}>Apply Leave</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonSecondary} onPress={() => navigation.navigate("LeaveLedger")}>
+                <Text style={styles.buttonTextSecondary}>View Ledger</Text>
+              </TouchableOpacity>
             </View>
-          )}
-        />
-      </View>
+
+            <Text style={styles.subHeading}>Recent Requests</Text>
+            {
+              recentRequests?.length === 0 ? (
+                <View style={styles.centeredView}>
+                  <Text style={styles.notFoundText}>No Data.</Text>
+                </View>
+              ) : (
+                <FlatList
+                  data={recentRequests}
+                  keyExtractor={(_, index) => index.toString()}
+                  renderItem={({ item }) => (
+                    <View style={styles.requestItem}>
+                      <View>
+                        <Text style={styles.dateText}>{formatDate(item?.startDate)} To {formatDate(item?.endDate)}</Text>
+                        <Text numberOfLines={1} ellipsizeMode="tail">
+                          {(item?.reason || '').length > 40 ? item?.reason.slice(0, 40) + '...' : item?.reason}
+                        </Text>
+                      </View>
+                      <Text style={[styles.statusText, getStatusStyle(item?.leaveStatus)]}>{item?.leaveStatus}</Text>
+                    </View>
+                  )}
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                />
+              )
+            }
+          </View>
+        )
+      }
     </>
   );
 };
@@ -300,6 +319,15 @@ const styles = StyleSheet.create({
   },
   pending: {
     color: '#d08700',
+  },
+  notFoundText: {
+    fontSize: 14,
+    color: "#777",
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

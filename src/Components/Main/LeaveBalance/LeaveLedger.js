@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from 'react-native';
 import { useAuth } from '../../../Context/auth.context.js';
+import { useRefresh } from "../../../Context/refresh.context.js";
 import { API_BASE_URL } from "@env";
 import axios from 'axios';
 import formatDate from './formatDate.js';
@@ -24,6 +25,8 @@ const LeaveLedger = ({ navigation }) => {
   const [employeeId, setEmployeeId] = useState(team?._id);
   const [loading, setLoading] = useState(true);
   const [recentRequests, setRecentRequests] = useState([]);
+  const { refreshKey, refreshPage } = useRefresh();
+  const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     if (team) {
@@ -46,6 +49,7 @@ const LeaveLedger = ({ navigation }) => {
       console.log("Error:", error.message);
     } finally {
       setLoading(false);
+      setRefreshing(false);
     };
   };
 
@@ -53,22 +57,11 @@ const LeaveLedger = ({ navigation }) => {
     if (employeeId) {
       fetchLeaveApproval(employeeId);
     };
-  }, [employeeId]);
+  }, [employeeId, refreshKey]);
 
-  if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#ffb300" />
-      </View>
-    );
-  };
-
-  if (!loading && recentRequests?.length === 0) {
-    return (
-      <View style={styles.loaderContainer}>
-        <Text style={styles.noDataText}>No leave ledger records found.</Text>
-      </View>
-    );
+  const handleRefresh = () => {
+    setRefreshing(true);
+    refreshPage();
   };
 
   return (
@@ -82,27 +75,40 @@ const LeaveLedger = ({ navigation }) => {
         />
         <Text style={styles.headerTitle}>Leave Ledger</Text>
       </View>
-
-      <View style={styles.container}>
-        <View style={styles.headerRow}>
-          <Text style={[styles.headerCell, styles.dateColumn]}>From Date</Text>
-          <Text style={[styles.headerCell, styles.dateColumn]}>To Date</Text>
-          <Text style={[styles.headerCell, styles.durationColumn]}>Duration</Text>
-          <Text style={[styles.headerCell, styles.statusColumn]}>Status</Text>
-        </View>
-        <FlatList
-          data={recentRequests}
-          keyExtractor={(_, index) => index.toString()}
-          renderItem={({ item }) => (
-            <View style={styles.row}>
-              <Text style={[styles.cell, styles.dateColumn]}>{formatDate(item?.startDate)}</Text>
-              <Text style={[styles.cell, styles.dateColumn]}>{formatDate(item?.endDate)}</Text>
-              <Text style={[styles.cell, styles.durationColumn]}>{item?.leaveDuration} Days</Text>
-              <Text style={[styles.cell, styles.statusColumn, getStatusStyle(item?.leaveStatus)]}>{item?.leaveStatus}</Text>
+      {
+        loading ? (
+          <View style={styles.loaderContainer}>
+            <ActivityIndicator size="large" color="#ffb300" />
+          </View>
+        ) : recentRequests?.length === 0 ? (
+          <View style={styles.loaderContainer}>
+            <Text style={styles.noDataText}>No leave ledger records found.</Text>
+          </View>
+        ) : (
+          <View style={styles.container}>
+            <View style={styles.headerRow}>
+              <Text style={[styles.headerCell, styles.dateColumn]}>From Date</Text>
+              <Text style={[styles.headerCell, styles.dateColumn]}>To Date</Text>
+              <Text style={[styles.headerCell, styles.durationColumn]}>Duration</Text>
+              <Text style={[styles.headerCell, styles.statusColumn]}>Status</Text>
             </View>
-          )}
-        />
-      </View>
+            <FlatList
+              data={recentRequests}
+              keyExtractor={(_, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.row}>
+                  <Text style={[styles.cell, styles.dateColumn]}>{formatDate(item?.startDate)}</Text>
+                  <Text style={[styles.cell, styles.dateColumn]}>{formatDate(item?.endDate)}</Text>
+                  <Text style={[styles.cell, styles.durationColumn]}>{item?.leaveDuration} Days</Text>
+                  <Text style={[styles.cell, styles.statusColumn, getStatusStyle(item?.leaveStatus)]}>{item?.leaveStatus}</Text>
+                </View>
+              )}
+              refreshing={refreshing}
+              onRefresh={handleRefresh}
+            />
+          </View>
+        )
+      }
     </>
   );
 };
