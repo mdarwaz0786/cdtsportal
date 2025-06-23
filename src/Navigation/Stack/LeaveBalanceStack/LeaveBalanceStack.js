@@ -3,6 +3,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { ActivityIndicator, View } from "react-native";
 import LeaveBalance from "../../../Components/Main/LeaveBalance/LeaveBalance.js";
 import LeaveLedger from "../../../Components/Main/LeaveBalance/LeaveLedger.js";
+import ApplyLeaveRequestScreen from "../../../Screens/LeaveRequest/ApplyLeaveRequestSceeen.js";
 
 // Create a Stack Navigator
 const Stack = createStackNavigator();
@@ -20,6 +21,7 @@ const LeaveBalanceStack = () => {
         screenOptions={{ headerShown: false }}>
         <Stack.Screen name="LeaveBalance" component={LeaveBalance} />
         <Stack.Screen name="LeaveLedger" component={LeaveLedger} />
+        <Stack.Screen name="LeaveApply" component={ApplyLeaveRequestScreen} />
       </Stack.Navigator>
     </Suspense>
   );

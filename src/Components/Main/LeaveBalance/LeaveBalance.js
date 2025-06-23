@@ -138,7 +138,7 @@ const LeaveBalance = () => {
         </View>
 
         <View style={styles.buttonRow}>
-          <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.navigate("ApplyLeaveRequest")}>
+          <TouchableOpacity style={styles.buttonPrimary} onPress={() => navigation.navigate("LeaveApply")}>
             <Text style={styles.buttonText}>Apply Leave</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.buttonSecondary} onPress={() => navigation.navigate("LeaveLedger")}>
