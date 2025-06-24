@@ -149,9 +149,9 @@ const LeaveLedger = ({ navigation }) => {
             })}
 
             <View style={styles.footer}>
-              <Text style={styles.label}>Total Credited: {leaveData?.totalEntitled}</Text>
-              <Text style={styles.label}>Total Debited: {leaveData?.totalTaken}</Text>
-              <Text style={styles.label}>Final Balance: {leaveData?.balance}</Text>
+              <Text style={styles.label}>Total Credited: {leaveData?.totalEntitled || 0}</Text>
+              <Text style={styles.label}>Total Debited: {leaveData?.totalTaken || 0}</Text>
+              <Text style={styles.label}>Final Balance: {leaveData?.balance || 0}</Text>
             </View>
           </ScrollView>
         )
