@@ -24,10 +24,10 @@ const ApprovalRequest = () => {
   };
 
   const approvalTypes = [
-    { type: 'compOff', label: 'Comp Off' },
     { type: 'leave', label: 'Leave' },
     { type: 'punchOut', label: 'Punch Out' },
     { type: 'punchIn', label: 'Punch In' },
+    { type: 'compOff', label: 'Comp Off' },
   ];
 
   return (
