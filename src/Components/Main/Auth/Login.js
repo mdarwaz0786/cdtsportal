@@ -21,7 +21,7 @@ const Login = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [isClientLogin, setIsClientLogin] = useState(false);
-  const { storeToken } = useAuth();
+  const { storeToken, deviceId } = useAuth();
   const userType = isClientLogin ? "Client" : "Employee";
 
   const handleLogin = async () => {
@@ -38,6 +38,8 @@ const Login = ({ navigation }) => {
         [loginField]: loginId,
         password,
         fcmToken,
+        deviceId,
+        appLogin: true,
       });
 
       if (response?.data?.success) {

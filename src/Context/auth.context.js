@@ -1,8 +1,9 @@
-import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Toast from "react-native-toast-message";
 import { API_BASE_URL } from "@env";
+import DeviceInfo from 'react-native-device-info';
 
 export const AuthContext = createContext();
 
@@ -13,6 +14,16 @@ export const AuthProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true);
   const isLoggedIn = !!token;
   const validToken = token ? `Bearer ${token}` : null;
+  const [deviceId, setDeviceId] = useState("");
+
+  const fetchDeviceId = async () => {
+    try {
+      const id = await DeviceInfo.getUniqueId();
+      setDeviceId(id);
+    } catch (error) {
+      console.log('Error:', error);
+    };
+  };
 
   const storeToken = async (serverToken, user) => {
     try {
@@ -88,6 +99,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    fetchDeviceId();
     initializeAuth();
   }, []);
 
@@ -100,6 +112,7 @@ export const AuthProvider = ({ children }) => {
     isLoading,
     validToken,
     userType,
+    deviceId,
   };
 
   return (

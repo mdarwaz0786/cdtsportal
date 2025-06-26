@@ -2,8 +2,10 @@ import React, { Suspense, lazy } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabNavigator from "../BottomTab/BottomTabNavigator.js";
-import { useAuth } from "../../Context/auth.context.js";
 import LoginScreen from "../../Screens/Auth/LoginScreen.js";
+import { useAuth } from "../../Context/auth.context.js";
+import { useForceUpdate } from "../../Context/forceUpdate.context.js";
+import ForceUpdate from "../../Components/Common/ForceUpdate.js";
 
 // Lazy load the screens
 const EmployeeStack = lazy(() => import("../Stack/EmployeeStack/EmployeeStack.js"));
@@ -31,6 +33,9 @@ const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const { isLoggedIn } = useAuth();
+  const { isUpdateRequired } = useForceUpdate();
+
+  console.log(isUpdateRequired);
 
   return (
     <Suspense
@@ -47,7 +52,9 @@ const DrawerNavigator = () => {
           swipeEnabled: false,
         }}>
         {
-          (!isLoggedIn) ? (
+          (isUpdateRequired) ? (
+            <Drawer.Screen name="ForceUpdate" component={ForceUpdate} />
+          ) : (!isLoggedIn) ? (
             <Drawer.Screen name="Login" component={LoginScreen} />
           ) : (
             <>

@@ -9,6 +9,7 @@ import Toast from "react-native-toast-message";
 import { AuthProvider } from "./src/Context/auth.context.js";
 import { RefreshProvider } from "./src/Context/refresh.context.js";
 import { NetworkProvider } from "./src/Context/network.context.js";
+import { ForceUpdateProvider } from "./src/Context/forceUpdate.context.js";
 
 // Custom Toast Configuration
 const toastConfig = {
@@ -40,17 +41,19 @@ const toastConfig = {
 
 const Main = () => (
   <SafeAreaProvider>
-    <AuthProvider>
-      <RefreshProvider>
-        <NetworkProvider>
-          <PaperProvider>
-            <App />
-            <StatusBar barStyle="dark-content" backgroundColor="#ffffff" translucent={false} />
-            <Toast config={toastConfig} />
-          </PaperProvider>
-        </NetworkProvider>
-      </RefreshProvider>
-    </AuthProvider>
+    <ForceUpdateProvider>
+      <AuthProvider>
+        <RefreshProvider>
+          <NetworkProvider>
+            <PaperProvider>
+              <App />
+              <StatusBar barStyle="dark-content" backgroundColor="#ffffff" translucent={false} />
+              <Toast config={toastConfig} />
+            </PaperProvider>
+          </NetworkProvider>
+        </RefreshProvider>
+      </AuthProvider>
+    </ForceUpdateProvider>
   </SafeAreaProvider>
 );
 
