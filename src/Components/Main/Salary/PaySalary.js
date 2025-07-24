@@ -15,7 +15,6 @@ const PaySalary = ({ route, navigation }) => {
   const year = route?.params?.year;
   const totalSalary = route?.params?.totalSalary;
   const employee = route?.params?.employee;
-  const monthlySalary = route?.params?.monthlySalary;
 
   const handleSubmit = async () => {
     try {
@@ -29,7 +28,6 @@ const PaySalary = ({ route, navigation }) => {
         {
           transactionId: transactionId,
           amountPaid: totalSalary,
-          monthlySalary,
           month,
           year,
           employee: employee,
