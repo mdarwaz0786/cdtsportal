@@ -109,8 +109,8 @@ android {
         applicationId "com.cdtsportal"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "3.0"
+        versionCode 4
+        versionName "4.0"
         // Include only English language resources to reduce APK size
         resConfigs "en"
     }
