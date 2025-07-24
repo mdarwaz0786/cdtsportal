@@ -6,11 +6,9 @@ import {
   Alert,
   TouchableOpacity,
   ScrollView,
-  Linking,
   RefreshControl,
 } from "react-native";
 import Icon from "react-native-vector-icons/Feather";
-import FileViewer from 'react-native-file-viewer';
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import RNFS from 'react-native-fs';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -22,7 +20,6 @@ import axios from "axios";
 import numberToWord from "../../../Helper/numberToWord.js";
 import getMonthName from "../../../Helper/getMonthName.js"
 import formatDate from "../../../Helper/formatDate.js";
-import Toast from "react-native-toast-message";
 import { useRefresh } from "../../../Context/refresh.context.js";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -159,28 +156,6 @@ const SalarySlip = ({ navigation }) => {
       };
     } catch (error) {
       return [];
-    };
-  };
-
-  const openPDF = async (filePath) => {
-    try {
-      const fileExists = await RNFS.exists(filePath);
-
-      if (!fileExists) {
-        Alert.alert("Error", "Pdf not generated");
-        return;
-      };
-
-      await FileViewer.open(filePath, { type: "application/pdf" });
-    } catch (error) {
-      Alert.alert(
-        "No PDF Viewer Found",
-        "Please install a PDF viewer to open this file.",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Install", onPress: () => Linking.openURL("market://details?id=com.adobe.reader") },
-        ],
-      );
     };
   };
 
@@ -577,12 +552,12 @@ const SalarySlip = ({ navigation }) => {
           <div class="attendance-data">${monthlyStatic?.monthlyStatics?.employeePresentDays}</div>
         </div>
         <div class="attendance-column">
-          <div class="attendance-title">Half Day</div>
-          <div class="attendance-data">${monthlyStatic?.monthlyStatics?.employeeHalfDays}</div>
-        </div>
-        <div class="attendance-column">
           <div class="attendance-title">Absent</div>
           <div class="attendance-data">${monthlyStatic?.monthlyStatics?.employeeAbsentDays}</div>
+        </div>
+        <div class="attendance-column">
+          <div class="attendance-title">Half Day</div>
+          <div class="attendance-data">${monthlyStatic?.monthlyStatics?.employeeHalfDays}</div>
         </div>
         <div class="attendance-column">
           <div class="attendance-title">Leave</div>
@@ -617,29 +592,6 @@ const SalarySlip = ({ navigation }) => {
     <!-- Attendance table with summary -->
     ${attendanceHTML}
 
-    <h6 class="attendance-summary-title">Working Hours Summary (${getMonthName(month)} ${year})</h6>
-
-    <div class="attendance-summary">
-      <div class="attendance-row">
-        <div class="attendance-column">
-          <div class="attendance-title">Total Working Days</div>
-          <div class="attendance-data">${salaryData[0]?.companyWorkingDays} Days</div>
-        </div>
-        <div class="attendance-column">
-          <div class="attendance-title">Required Working Hours</div>
-          <div class="attendance-data">${salaryData[0]?.companyWorkingHours}</div>
-        </div>
-        <div class="attendance-column">
-          <div class="attendance-title">Worked Hours</div>
-          <div class="attendance-data">${salaryData[0]?.employeeHoursWorked}</div>
-        </div>
-        <div class="attendance-column">
-          <div class="attendance-title">Shortfall Hours</div>
-          <div class="attendance-data">${salaryData[0]?.employeeHoursShortfall}</div>
-        </div>
-      </div>
-    </div>
-
     <h6 class="attendance-summary-title">Attendance Summary (${getMonthName(month)} ${year})</h6>
 
     <div class="attendance-summary">
@@ -671,6 +623,29 @@ const SalarySlip = ({ navigation }) => {
         <div class="attendance-column">
           <div class="attendance-title">Holiday</div>
           <div class="attendance-data">${monthlyStatic?.monthlyStatics?.totalHolidays}</div>
+        </div>
+      </div>
+    </div>
+
+    <h6 class="attendance-summary-title">Working Hours Summary (${getMonthName(month)} ${year})</h6>
+
+    <div class="attendance-summary">
+      <div class="attendance-row">
+        <div class="attendance-column">
+          <div class="attendance-title">Total Working Days</div>
+          <div class="attendance-data">${salaryData[0]?.companyWorkingDays} Days</div>
+        </div>
+        <div class="attendance-column">
+          <div class="attendance-title">Required Working Hours</div>
+          <div class="attendance-data">${salaryData[0]?.companyWorkingHours}</div>
+        </div>
+        <div class="attendance-column">
+          <div class="attendance-title">Worked Hours</div>
+          <div class="attendance-data">${salaryData[0]?.employeeHoursWorked}</div>
+        </div>
+        <div class="attendance-column">
+          <div class="attendance-title">Shortfall Hours</div>
+          <div class="attendance-data">${salaryData[0]?.employeeHoursShortfall}</div>
         </div>
       </div>
     </div>
@@ -709,11 +684,11 @@ const SalarySlip = ({ navigation }) => {
 
       // Notify the media scanner about the new file
       await RNFetchBlob.fs.scanFile([{ path: newPath, mime: 'application/pdf' }]);
-      Toast.show({ type: "success", text1: "Slip Downloaded", text2: `Slip saved at: ${newPath}` });
-
-      setTimeout(() => {
-        openPDF(newPath);
-      }, 3000)
+      Alert.alert(
+        "Salary Slip Downloaded",
+        `Salary Slip saved at: ${newPath}`,
+        [{ text: "OK" }]
+      );
     } catch (error) {
       Alert.alert("Error", "Download Failed");
     };

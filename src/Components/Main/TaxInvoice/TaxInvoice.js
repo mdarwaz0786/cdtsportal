@@ -5,10 +5,8 @@ import {
   StyleSheet,
   Alert,
   TouchableOpacity,
-  Linking,
   FlatList,
 } from "react-native";
-import FileViewer from 'react-native-file-viewer';
 import Icon from "react-native-vector-icons/Feather";
 import RNHTMLtoPDF from "react-native-html-to-pdf";
 import RNFS from 'react-native-fs';
@@ -19,7 +17,6 @@ import { useAuth } from "../../../Context/auth.context.js";
 import { API_BASE_URL } from "@env";
 import axios from "axios";
 import formatDate from "../../../Helper/formatDate.js";
-import Toast from "react-native-toast-message";
 import { useRefresh } from "../../../Context/refresh.context.js";
 import { ActivityIndicator } from "react-native-paper";
 
@@ -87,28 +84,6 @@ const TaxInvoice = ({ navigation }) => {
       const nextPage = page + 1;
       setPage(nextPage);
       fetchInvoice(nextPage);
-    };
-  };
-
-  const openPDF = async (filePath) => {
-    try {
-      const fileExists = await RNFS.exists(filePath);
-
-      if (!fileExists) {
-        Alert.alert("Error", "Pdf not generated");
-        return;
-      };
-
-      await FileViewer.open(filePath, { type: "application/pdf" });
-    } catch (error) {
-      Alert.alert(
-        "No PDF Viewer Found",
-        "Please install a PDF viewer to open this file.",
-        [
-          { text: "Cancel", style: "cancel" },
-          { text: "Install", onPress: () => Linking.openURL("market://details?id=com.adobe.reader") },
-        ]
-      );
     };
   };
 
@@ -378,11 +353,11 @@ const TaxInvoice = ({ navigation }) => {
 
         // Notify the media scanner about the new file
         await RNFetchBlob.fs.scanFile([{ path: newPath, mime: 'application/pdf' }]);
-        Toast.show({ type: "success", text1: "Invoice Downloaded", text2: `Invoice saved at: ${newPath}` });
-
-        setTimeout(() => {
-          openPDF(newPath);
-        }, 3000)
+        Alert.alert(
+          "Tax Invoice Downloaded",
+          `Tax Invoice saved at: ${newPath}`,
+          [{ text: "OK" }]
+        );
       } catch (error) {
         Alert.alert("Error", "Downloading Failed");
       } finally {

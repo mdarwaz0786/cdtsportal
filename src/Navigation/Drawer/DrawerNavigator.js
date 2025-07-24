@@ -32,10 +32,12 @@ const LogoutScreen = lazy(() => import("../../Screens/Auth/LogoutScreen.js"));
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, team, deviceId, isLoading, logOutTeam } = useAuth();
   const { isUpdateRequired } = useForceUpdate();
 
-  console.log(isUpdateRequired);
+  if (!isLoading && team?.deviceId && deviceId && team.deviceId !== deviceId) {
+    logOutTeam();
+  };
 
   return (
     <Suspense

@@ -227,7 +227,8 @@ const SalarySlip = ({ route }) => {
                     employee: s?.employeeId,
                     month: month,
                     year: year,
-                    totalSalary: s?.totalSalary
+                    totalSalary: s?.totalSalary,
+                    monthlySalary: s?.monthlySalary,
                   })}
                   style={styles.button}>
                   <Text style={styles.buttonText}>{s?.salaryPaid === false ? "Pay Salary" : "Paid"}</Text>
