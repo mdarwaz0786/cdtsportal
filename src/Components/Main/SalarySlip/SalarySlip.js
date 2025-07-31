@@ -455,16 +455,12 @@ const SalarySlip = ({ navigation }) => {
           <div class="label">Date of Joining</div>
           <div class="value">${formatDate(employee?.joining)}</div>
         </div>
-        <div class="row">
-          <div class="label">Mobile Number</div>
-          <div class="value">${employee?.mobile}</div>
-        </div>
       </div>
 
       <div class="right-section">
-        <div class="row" style="margin-top: 8px;">
-          <div class="label">Transaction ID</div>
-          <div class="value">${transactionId}</div>
+        <div class="row">
+          <div class="label">Mobile Number</div>
+          <div class="value">${employee?.mobile}</div>
         </div>
         <div class="row">
           <div class="label">Employee ID</div>
@@ -506,11 +502,11 @@ const SalarySlip = ({ navigation }) => {
     <div class="net-pay">
       <div class="net-row" style="margin-bottom: 10px;">
         <div class="net-label">Net Payable (Net Salary)</div>
-        <div class="net-value">₹${amountPaid}</div>
+        <div class="net-value">₹${salaryData[0]?.totalSalary}</div>
       </div>
       <div class="net-row">
         <div class="net-label">Amount in Words</div>
-        <div class="net-value">${numberToWord(amountPaid)}</div>
+        <div class="net-value">${numberToWord(salaryData[0]?.totalSalary)}</div>
       </div>
     </div>
 
