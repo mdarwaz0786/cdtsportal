@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -31,7 +31,7 @@ const ClientProfileScreen = ({ navigation }) => {
 
   const toggleModal = () => setIsModalVisible(!isModalVisible);
 
-  const fetchTeamData = async (id) => {
+  const fetchTeamData = async () => {
     try {
       setLoading(true);
       const response = await axios.get(

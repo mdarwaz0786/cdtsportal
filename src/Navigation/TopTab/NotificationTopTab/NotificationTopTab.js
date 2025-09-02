@@ -8,7 +8,6 @@ import UpcomingHolidaysScreen from '../../../Screens/Notifications/UpcomingHolid
 import Icon from 'react-native-vector-icons/Ionicons';
 import ApprovalRequestScreen from '../../../Screens/Notifications/ApprovalRequestScreen.js';
 import NotificationScreen from '../../../Screens/Notifications/NotificationScreen.js';
-import ClientNotificationScreen from '../../../Screens/Notifications/ClientNotificationScreen.js';
 import { useAuth } from '../../../Context/auth.context.js';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -27,8 +26,11 @@ const NotificationHeader = () => {
 };
 
 const NotificationTopTab = () => {
+  const { team } = useAuth();
   const [userType, setUserType] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  const permissions = team?.role?.permissions?.attendance?.fields;
 
   const fetchUserType = async () => {
     try {
@@ -53,7 +55,6 @@ const NotificationTopTab = () => {
     );
   };
 
-  const { team } = useAuth();
   return (
     <Suspense
       fallback={
@@ -95,34 +96,34 @@ const NotificationTopTab = () => {
           }}
         >
           {
-            (team?.role?.name?.toLowerCase() === "admin" || team?.role?.name?.toLowerCase() === "hr") && (
-              <>
-                <Tab.Screen
-                  name="TodayAttendance"
-                  component={TodayAttendanceScreen}
-                  options={{ tabBarLabel: 'Attendance', }}
-                />
-                <Tab.Screen
-                  name="TodayWorkSummary"
-                  component={TodayWorkSummaryScreen}
-                  options={{ tabBarLabel: 'Work Summary' }}
-                />
-                <Tab.Screen
-                  name="ApprovalRequest"
-                  component={ApprovalRequestScreen}
-                  options={{ tabBarLabel: 'Approval' }}
-                />
-              </>
+            (permissions?.attendance) && (
+              <Tab.Screen
+                name="TodayAttendance"
+                component={TodayAttendanceScreen}
+                options={{ tabBarLabel: 'Attendance', }}
+              />
             )
           }
           {
-            (userType === "Client") ? (
+            (permissions?.workSummary) && (
               <Tab.Screen
-                name="Notification"
-                component={ClientNotificationScreen}
-                options={{ tabBarLabel: 'Message' }}
+                name="TodayWorkSummary"
+                component={TodayWorkSummaryScreen}
+                options={{ tabBarLabel: 'Work Summary' }}
               />
-            ) : (
+            )
+          }
+          {
+            (permissions?.approval) && (
+              <Tab.Screen
+                name="ApprovalRequest"
+                component={ApprovalRequestScreen}
+                options={{ tabBarLabel: 'Approval' }}
+              />
+            )
+          }
+          {
+            (userType === "Employee") && (
               <Tab.Screen
                 name="Notification"
                 component={NotificationScreen}
@@ -130,11 +131,15 @@ const NotificationTopTab = () => {
               />
             )
           }
-          <Tab.Screen
-            name="UpcomingHolidays"
-            component={UpcomingHolidaysScreen}
-            options={{ tabBarLabel: 'Holidays' }}
-          />
+          {
+            (permissions?.upcomingHoliday) && (
+              <Tab.Screen
+                name="UpcomingHolidays"
+                component={UpcomingHolidaysScreen}
+                options={{ tabBarLabel: 'Upcoming Holidays' }}
+              />
+            )
+          }
         </Tab.Navigator>
       </View>
     </Suspense>

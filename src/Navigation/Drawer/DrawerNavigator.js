@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useEffect } from "react";
 import { ActivityIndicator, View } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import BottomTabNavigator from "../BottomTab/BottomTabNavigator.js";
@@ -35,9 +35,13 @@ const DrawerNavigator = () => {
   const { isLoggedIn, team, deviceId, isLoading, logOutTeam } = useAuth();
   const { isUpdateRequired } = useForceUpdate();
 
-  if (!isLoading && team?.deviceId && deviceId && team.deviceId !== deviceId) {
-    logOutTeam();
-  };
+  useEffect(() => {
+    if (isLoggedIn && !team?.allowMultiDevice) {
+      if (!isLoading && team?.deviceId && deviceId && team.deviceId !== deviceId) {
+        logOutTeam();
+      };
+    };
+  }, [isLoggedIn, isLoading, team?.allowMultiDevice, team?.deviceId, deviceId]);
 
   return (
     <Suspense

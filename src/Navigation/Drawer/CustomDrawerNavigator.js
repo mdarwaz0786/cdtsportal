@@ -5,7 +5,7 @@ import { useAuth } from "../../Context/auth.context.js";
 import Logo from "../../Assets/logo.png";
 
 const CustomDrawerNavigator = ({ navigation }) => {
-  const { team, isLoggedIn, isLoading, logOutTeam, userType } = useAuth();
+  const { team, isLoggedIn, isLoading, logOutTeam } = useAuth();
   const fieldPermissions = team?.role?.permissions?.attendance?.fields;
 
   const handleLogout = () => {
@@ -105,25 +105,25 @@ const CustomDrawerNavigator = ({ navigation }) => {
       label: "Service",
       icon: "briefcase-outline",
       route: "Service",
-      show: (userType === "Employee" && isLoggedIn) ? true : false,
+      show: team?.isSuperAdmin,
     },
     {
       label: "About Us",
       icon: "information-circle-outline",
       route: "About",
-      show: true,
+      show: team?.isSuperAdmin,
     },
     {
       label: "Contact Us",
       icon: "call-outline",
       route: "Contact",
-      show: true,
+      show: team?.isSuperAdmin,
     },
     {
       label: "Help & Support",
       icon: "help-circle-outline",
       route: "Help",
-      show: true,
+      show: team?.isSuperAdmin,
     },
   ];
 

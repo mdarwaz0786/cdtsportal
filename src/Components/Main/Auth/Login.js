@@ -7,7 +7,6 @@ import {
   Image,
   StyleSheet,
   ActivityIndicator,
-  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
 import Toast from "react-native-toast-message";
@@ -20,22 +19,16 @@ const Login = ({ navigation }) => {
   const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isClientLogin, setIsClientLogin] = useState(false);
   const { storeToken, deviceId } = useAuth();
-  const userType = isClientLogin ? "Client" : "Employee";
 
   const handleLogin = async () => {
     setLoading(true);
     try {
-      const endpoint = isClientLogin
-        ? `${API_BASE_URL}/api/v1/customer/login-customer`
-        : `${API_BASE_URL}/api/v1/team/login-team`;
-
-      const loginField = isClientLogin ? "mobile" : "employeeId";
+      const endpoint = `${API_BASE_URL}/api/v1/login/login-user`
       const fcmToken = await AsyncStorage.getItem("fcmToken");
 
       const response = await axios.post(endpoint, {
-        [loginField]: loginId,
+        loginId,
         password,
         fcmToken,
         deviceId,
@@ -46,6 +39,7 @@ const Login = ({ navigation }) => {
         setLoginId("");
         setPassword("");
         const token = response?.data?.token;
+        const userType = response?.data?.userType;
         storeToken(token, userType);
         Toast.show({ type: "success", text1: "Login Successful" });
         navigation.navigate("Home");
@@ -68,18 +62,10 @@ const Login = ({ navigation }) => {
         />
       </View>
       <Text style={styles.heading}>Login</Text>
-      <Text style={styles.subheading}>
-        {isClientLogin
-          ? "Login using your mobile number and password."
-          : "Login using your employee ID and password."}
-      </Text>
-
+      <Text style={styles.subheading}>Login using your login id and password.</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>
-          {isClientLogin
-            ? "Mobile Number"
-            : "Employee ID"}
-          <Text style={styles.required}> *</Text>
+          Login ID <Text style={styles.required}> *</Text>
         </Text>
         <TextInput
           style={styles.input}
@@ -107,17 +93,6 @@ const Login = ({ navigation }) => {
       ) : (
         <Button title="Login" onPress={handleLogin} color="#ffb300" />
       )}
-
-      <TouchableOpacity
-        style={styles.switchButton}
-        onPress={() => setIsClientLogin(!isClientLogin)}
-      >
-        <Text style={styles.switchText}>
-          {isClientLogin
-            ? "Login as Employee"
-            : "Login as Client"}
-        </Text>
-      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -169,16 +144,6 @@ const styles = StyleSheet.create({
     color: "#555",
     fontSize: 13,
     paddingLeft: 15,
-  },
-  switchButton: {
-    marginVertical: 30,
-    alignItems: "center",
-  },
-  switchText: {
-    color: "#ffb300",
-    fontWeight: "600",
-    fontSize: 14,
-    textDecorationLine: "underline"
   },
 });
 

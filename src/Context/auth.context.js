@@ -86,6 +86,10 @@ export const AuthProvider = ({ children }) => {
         response = await axios.get(`${API_BASE_URL}/api/v1/team/loggedin-team`, {
           headers: { Authorization: `Bearer ${token}` }
         });
+      } else if (user === "Company") {
+        response = await axios.get(`${API_BASE_URL}/api/v1/company/loggedin-company`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
       };
 
       if (response?.data?.success) {

@@ -1,18 +1,17 @@
-import React, { Suspense, lazy, useState } from "react";
+import React, { Suspense, lazy } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import Icon from "react-native-vector-icons/Ionicons";
 import { ActivityIndicator, View } from "react-native";
 import { useAuth } from "../../Context/auth.context.js";
 import HomeScreen from "../../Screens/Home/HomeScreen.js";
-import ClientHomeScreen from "../../Screens/ClientHome/ClientHomeScreen.js";
 
 // Lazy load the screens
 const NotificationTobTab = lazy(() => import("../TopTab/NotificationTopTab/NotificationTopTab.js"),);
 const CustomDrawerNavigator = lazy(() => import("../Drawer/CustomDrawerNavigator.js"));
 const ProfileScreen = lazy(() => import("../../Screens/Profile/ProfileScreen.js"));
 const ClientProfileScreen = lazy(() => import("../../Screens/ClientProfile/ClientProfileScreen.js"));
+const CompanyProfileScreen = lazy(() => import("../../Screens/CompanyProfile/CompanyProfileScreen.js"));
 const LoginScreen = lazy(() => import("../../Screens/Auth/LoginScreen.js"));
-const ServiceScreen = lazy(() => import("../../Screens/Service/ServiceScreen.js"));
 
 const Tab = createBottomTabNavigator();
 
@@ -64,29 +63,19 @@ const BottomTabNavigator = () => {
             fontWeight: "400",
           },
         })}>
-        {
-          (userType === "Employee") ? (
-            <Tab.Screen name="Home" component={HomeScreen} />
-          ) : (
-            <Tab.Screen name="Home" component={ClientHomeScreen} />
-          )
-        }
+        <Tab.Screen name="Home" component={HomeScreen} />
         {
           (!isLoggedIn) ? (
             <Tab.Screen name="Profile" component={LoginScreen} options={{ tabBarLabel: "Login" }} />
           ) : (userType === "Employee") ? (
             <Tab.Screen name="Profile" component={ProfileScreen} />
-          ) : (
+          ) : (userType === "Client") ? (
             <Tab.Screen name="Profile" component={ClientProfileScreen} />
-          )
-        }
-        {
-          (userType === "Employee") ? (
-            <Tab.Screen name="Notifications" component={NotificationTobTab} />
           ) : (
-            <Tab.Screen name="Service" component={ServiceScreen} />
+            <Tab.Screen name="Profile" component={CompanyProfileScreen} />
           )
         }
+        <Tab.Screen name="Notifications" component={NotificationTobTab} />
         <Tab.Screen name="Menu" component={CustomDrawerNavigator} />
       </Tab.Navigator>
     </Suspense>

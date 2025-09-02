@@ -26,7 +26,7 @@ import formatDate from "../../../Helper/formatDate.js";
 
 const Home = () => {
   const navigation = useNavigation();
-  const { team, validToken } = useAuth();
+  const { team, validToken, userType } = useAuth();
   const { refreshKey, refreshPage } = useRefresh();
   const [attendance, setAttendance] = useState([]);
   const [monthlyStatistic, setMonthlyStatistic] = useState();
@@ -109,6 +109,12 @@ const Home = () => {
   // Handle punch attendance
   const handlePunchAction = useCallback(async (actionType) => {
     try {
+
+      if (userType !== "Employee") {
+        Toast.show({ type: "info", text1: "Only employee can mark attendance." });
+        return;
+      };
+
       const position = await getUserLocation();
 
       if (!position) {
@@ -177,11 +183,21 @@ const Home = () => {
 
   // Navigate to my attendance screen
   const navigateToMyAttendance = () => {
+    if (userType !== "Employee") {
+      Toast.show({ type: "info", text1: "Only employee can see my attendance." });
+      return;
+    };
+
     navigation.navigate("MyAttendance", { id: employeeId });
   };
 
   // Navigate to apply leave screen
   const navigateToApplyLeaveRequest = () => {
+    if (userType !== "Employee") {
+      Toast.show({ type: "info", text1: "Only employee can apply leave request." });
+      return;
+    };
+
     navigation.navigate("ApplyLeaveRequest");
   };
 
@@ -206,8 +222,8 @@ const Home = () => {
     { label: "Leave Days", value: monthlyStatistic?.employeeLeaveDays || 0, icon: "🏖️" },
     { label: "Late In Days", value: monthlyStatistic?.employeeLateInDays || 0, icon: "⏰" },
     { label: "Total Hours Worked", value: `${formatTimeToHoursMinutes(monthlyStatistic?.employeeWorkingHours) || "00:00"} / ${formatTimeToHoursMinutes(monthlyStatistic?.employeeRequiredWorkingHours) || "00:00"}`, icon: "🕒" },
-    { label: "Avgerage Punch In Time", value: formatTimeWithAmPm(monthlyStatistic?.averagePunchInTime) || "-", icon: "🔔" },
-    { label: "Avgerage Punch Out Time", value: formatTimeWithAmPm(monthlyStatistic?.averagePunchOutTime) || "-", icon: "🔕" },
+    { label: "Average Punch In Time", value: formatTimeWithAmPm(monthlyStatistic?.averagePunchInTime) || "-", icon: "🔔" },
+    { label: "Average Punch Out Time", value: formatTimeWithAmPm(monthlyStatistic?.averagePunchOutTime) || "-", icon: "🔕" },
   ], [monthlyStatistic]);
 
   return (
@@ -223,8 +239,8 @@ const Home = () => {
               source={require("../../../Assets/user-icon.png")}
             />
             <View>
-              <Text style={styles.employeeName}>{team?.name}</Text>
-              <Text style={styles.positionText}>{team?.role?.name}</Text>
+              <Text style={styles.employeeName}>{team?.name || team?.companyName}</Text>
+              <Text style={styles.positionText}>{team?.designation?.name || team?.role?.name}</Text>
             </View>
           </TouchableOpacity>
           {loading ? (
