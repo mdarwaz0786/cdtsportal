@@ -249,21 +249,23 @@ const Home = () => {
               <ActivityIndicator size={30} color="#ffb300" />
             </View>
           ) : (
-            <View style={styles.punchButtons}>
-              {!attendance[0]?.punchIn ? (
-                <TouchableOpacity
-                  style={[styles.punchButton, styles.punchInButton]}
-                  onPress={() => handlePunchAction("punchIn")}>
-                  <Text style={styles.punchButtonText}>Punch In</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={[styles.punchButton, styles.punchOutButton]}
-                  onPress={() => handlePunchAction("punchOut")}>
-                  <Text style={styles.punchButtonText}>Punch Out</Text>
-                </TouchableOpacity>
-              )}
-            </View>
+            (userType === "Employee") && (
+              <View style={styles.punchButtons}>
+                {!attendance[0]?.punchIn ? (
+                  <TouchableOpacity
+                    style={[styles.punchButton, styles.punchInButton]}
+                    onPress={() => handlePunchAction("punchIn")}>
+                    <Text style={styles.punchButtonText}>Punch In</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={[styles.punchButton, styles.punchOutButton]}
+                    onPress={() => handlePunchAction("punchOut")}>
+                    <Text style={styles.punchButtonText}>Punch Out</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            )
           )}
         </View>
       </View>
