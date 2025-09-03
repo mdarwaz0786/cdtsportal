@@ -249,7 +249,7 @@ const Attendance = ({ route }) => {
                         ? styles.absent
                         : item?.status === "Holiday"
                           ? styles.holiday
-                          : item?.status === "Sunday" || item?.status === "Saturday"
+                          : item?.status === "Sunday" || item?.status === "Saturday" || item?.status === "Weekly Off"
                             ? styles.sunday
                             : item?.status === "On Leave"
                               ? styles.onLeave
@@ -347,7 +347,7 @@ const Attendance = ({ route }) => {
                 Total Holidays: {attendanceSummary?.totalHolidays}
               </Text>
               <Text style={{ fontSize: 14, marginBottom: 5, color: "#555" }}>
-                Total Sundays: {attendanceSummary?.totalSundays}
+                Total Weekly Off: {attendanceSummary?.totalWeeklyOff}
               </Text>
               <Text style={{ fontSize: 14, marginBottom: 5, color: "#555" }}>
                 Total Present Days: {attendanceSummary?.employeePresentDays}/

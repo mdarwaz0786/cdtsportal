@@ -52,7 +52,7 @@ const Holiday = ({ navigation }) => {
       <TouchableOpacity
         style={styles.notificationCard}
         onPress={() =>
-          (team?.role?.name.toLowerCase() === "admin" || team?.role?.name.toLowerCase() === "hr") &&
+          (team?.role?.permissions?.holiday?.update) &&
           navigation.navigate('EditHoliday', { id: item?._id })
         }>
         <View style={styles.cardHeader}>
@@ -83,7 +83,7 @@ const Holiday = ({ navigation }) => {
         <Icon style={styles.backIcon} name="arrow-left" size={20} color="#000" onPress={() => navigation.goBack()} />
         <Text style={styles.headerTitle}>Holiday</Text>
         {
-          (team?.role?.name.toLowerCase() === "admin" || team?.role?.name.toLowerCase() === "hr") && (
+          (team?.role?.permissions?.holiday?.create) && (
             <TouchableOpacity style={styles.buttonAdd} onPress={() => navigation.navigate("AddHoliday")}>
               <Text style={styles.buttonAddText}>Add New Holiday</Text>
             </TouchableOpacity>

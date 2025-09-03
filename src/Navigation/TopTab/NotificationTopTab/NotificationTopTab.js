@@ -123,7 +123,7 @@ const NotificationTopTab = () => {
             )
           }
           {
-            (userType === "Employee") && (
+            (permissions?.message || userType === "Employee") && (
               <Tab.Screen
                 name="Notification"
                 component={NotificationScreen}
@@ -132,7 +132,7 @@ const NotificationTopTab = () => {
             )
           }
           {
-            (permissions?.upcomingHoliday) && (
+            (permissions?.upcomingHoliday || userType === "Client") && (
               <Tab.Screen
                 name="UpcomingHolidays"
                 component={UpcomingHolidaysScreen}

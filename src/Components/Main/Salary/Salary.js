@@ -21,7 +21,7 @@ import formatDate from "../../../Helper/formatDate.js";
 const SalarySlip = ({ route }) => {
   const id = route?.params?.id;
   const navigation = useNavigation();
-  const { validToken } = useAuth();
+  const { validToken, team } = useAuth();
   const { refreshKey, refreshPage } = useRefresh();
   const [employee, setEmployee] = useState("");
   const [salary, setSalary] = useState([]);
@@ -200,7 +200,7 @@ const SalarySlip = ({ route }) => {
                 <Text style={styles.salaryText}>Month: {formatDate(s?.month)}</Text>
                 <Text style={styles.salaryText}>Total Days in Month: {s?.totalDaysInMonth} Days</Text>
                 <Text style={styles.salaryText}>Total Holidays: {s?.totalHolidays} Days</Text>
-                <Text style={styles.salaryText}>Total Sundays: {s?.totalSundays} Days</Text>
+                <Text style={styles.salaryText}>Total Weekly Off: {s?.totalWeeklyOff} Days</Text>
                 <Text style={styles.salaryText}>Total Present Days: {s?.totalPresent} Days</Text>
                 <Text style={styles.salaryText}>Total Half Days: {s?.totalHalfDays} Days</Text>
                 <Text style={styles.salaryText}>Total Absent Days: {s?.totalAbsent} Days</Text>
@@ -222,16 +222,20 @@ const SalarySlip = ({ route }) => {
                 <Text style={styles.salaryText}>Total Salary Deducted: ₹{s?.totalDeduction}</Text>
                 <Text style={styles.salaryText}>Total Salary: ₹{s?.totalSalary}</Text>
                 <Text style={styles.salaryText}>Monthly Salary: ₹{s?.monthlySalary}</Text>
-                <TouchableOpacity
-                  onPress={() => s?.salaryPaid === false && navigation.navigate("PaySalary", {
-                    employee: s?.employeeId,
-                    month: month,
-                    year: year,
-                    totalSalary: s?.totalSalary,
-                  })}
-                  style={styles.button}>
-                  <Text style={styles.buttonText}>{s?.salaryPaid === false ? "Pay Salary" : "Paid"}</Text>
-                </TouchableOpacity>
+                {
+                  (team?.role?.permissions?.salary?.create) && (
+                    <TouchableOpacity
+                      onPress={() => s?.salaryPaid === false && navigation.navigate("PaySalary", {
+                        employee: s?.employeeId,
+                        month: month,
+                        year: year,
+                        totalSalary: s?.totalSalary,
+                      })}
+                      style={styles.button}>
+                      <Text style={styles.buttonText}>{s?.salaryPaid === false ? "Pay Salary" : "Paid"}</Text>
+                    </TouchableOpacity>
+                  )
+                }
               </View>
             ))}
           </ScrollView>

@@ -79,8 +79,8 @@ const ApplyCompOff = ({ navigation }) => {
     };
 
     const compOffData = {
-      date: selectedDate,
-      attendanceDate: date.toISOString().split("T")[0],
+      attendanceDate: selectedDate,
+      compOffDate: date.toISOString().split("T")[0],
       employee: team?._id,
     };
 
@@ -101,7 +101,6 @@ const ApplyCompOff = ({ navigation }) => {
         navigation.goBack();
       };
     } catch (error) {
-      console.log("Error:", error.message);
       Toast.show({ type: "error", text1: error?.response?.data?.message || "Try again" });
     };
   };
@@ -140,10 +139,10 @@ const ApplyCompOff = ({ navigation }) => {
             }
           >
             <Text style={{ marginBottom: 5, color: "#555" }}>
-              Worked Date <Text style={{ color: "red" }}>*</Text>
+              Attendance Date <Text style={{ color: "red" }}>*</Text>
             </Text>
             <View style={styles.pickerContainer}>
-              {/* Worked Date Picker */}
+              {/* Attendance Date Picker */}
               <Picker
                 selectedValue={selectedDate}
                 onValueChange={(itemValue) => setSelectedDate(itemValue)}
@@ -151,8 +150,8 @@ const ApplyCompOff = ({ navigation }) => {
               >
                 <Picker.Item style={styles.pickerItem} label="Select date" value="" />
                 {
-                  employee?.eligibleCompOffDate?.map((value) => (
-                    <Picker.Item style={styles.pickerItem} key={value?._id} label={value?.date} value={value?.date} />
+                  employee?.eligibleCompOffDate?.map((value, index) => (
+                    <Picker.Item style={styles.pickerItem} key={index} label={value?.attendanceDate} value={value?.attendanceDate} />
                   ))
                 }
               </Picker>
