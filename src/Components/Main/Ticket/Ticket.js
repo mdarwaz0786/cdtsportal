@@ -9,7 +9,7 @@ import { ActivityIndicator } from "react-native-paper";
 import Icon from "react-native-vector-icons/Feather";
 
 const Ticket = () => {
-  const { validToken } = useAuth();
+  const { validToken, userType } = useAuth();
   const { refreshKey, refreshPage } = useRefresh();
   const navigation = useNavigation();
   const [ticket, setTicket] = useState([]);
@@ -79,9 +79,13 @@ const Ticket = () => {
       <View style={styles.header}>
         <Icon style={styles.backIcon} name="arrow-left" size={20} color="#000" onPress={() => navigation.goBack()} />
         <Text style={styles.headerTitle}>Ticket</Text>
-        <TouchableOpacity style={styles.buttonAdd} onPress={() => navigation.navigate("AddTicket")}>
-          <Text style={styles.buttonAddText}>Raise New Ticket</Text>
-        </TouchableOpacity>
+        {
+          (userType === "Client") && (
+            <TouchableOpacity style={styles.buttonAdd} onPress={() => navigation.navigate("AddTicket")}>
+              <Text style={styles.buttonAddText}>Raise New Ticket</Text>
+            </TouchableOpacity>
+          )
+        }
       </View>
 
       <View style={styles.container}>

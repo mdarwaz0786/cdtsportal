@@ -1,4 +1,4 @@
-package com.cdtsportal
+package com.cdtsportals
 
 import android.app.Application
 import com.facebook.react.PackageList

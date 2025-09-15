@@ -1,19 +1,49 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import messaging from '@react-native-firebase/messaging';
-import { PermissionsAndroid, Platform } from 'react-native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import messaging from "@react-native-firebase/messaging";
+import { PermissionsAndroid, Platform, Alert } from "react-native";
 
 export async function requestUserPermission() {
-  if (Platform.OS === 'android' && Platform.Version >= 33) {
-    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS);
-    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-      getFcmToken();
+  try {
+    if (Platform.OS === "android") {
+      if (Platform.Version >= 33) {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS
+        );
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          await getFcmToken();
+        } else {
+          Alert.alert("Permission Required", "Notification permission denied.");
+        };
+      } else {
+        await getFcmToken();
+      };
+    } else if (Platform.OS === "ios") {
+      const authStatus = await messaging().requestPermission({
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: true,
+        sound: true,
+      });
+
+      const enabled =
+        authStatus === messaging.AuthorizationStatus.AUTHORIZED ||
+        authStatus === messaging.AuthorizationStatus.PROVISIONAL;
+
+      if (enabled) {
+        await getFcmToken();
+      } else {
+        Alert.alert(
+          "Permission Required",
+          "Notifications are disabled. Please enable them in Settings."
+        );
+      };
     };
-  } else {
-    const authStatus = await messaging().requestPermission();
-    const enabled = authStatus === messaging.AuthorizationStatus.AUTHORIZED || authStatus === messaging.AuthorizationStatus.PROVISIONAL;
-    if (enabled) {
-      getFcmToken();
-    };
+  } catch (error) {
+    console.log("Permission error:", error.message);
   };
 };
 

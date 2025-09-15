@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "cdtsportal.app"
-               BlueprintName = "cdtsportal"
-               ReferencedContainer = "container:cdtsportal.xcodeproj">
+               BuildableName = "cdtsportals.app"
+               BlueprintName = "cdtsportals"
+               ReferencedContainer = "container:cdtsportals.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "cdtsportalpTests.xctest"
-               BlueprintName = "cdtsportalTests"
-               ReferencedContainer = "container:cdtsportal.xcodeproj">
+               BuildableName = "cdtsportalspTests.xctest"
+               BlueprintName = "cdtsportalsTests"
+               ReferencedContainer = "container:cdtsportals.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "cdtsportal.app"
-            BlueprintName = "cdtsportal"
-            ReferencedContainer = "container:cdtsportal.xcodeproj">
+            BuildableName = "cdtsportals.app"
+            BlueprintName = "cdtsportals"
+            ReferencedContainer = "container:cdtsportals.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "cdtsportal.app"
-            BlueprintName = "cdtsportal"
-            ReferencedContainer = "container:cdtsportal.xcodeproj">
+            BuildableName = "cdtsportals.app"
+            BlueprintName = "cdtsportals"
+            ReferencedContainer = "container:cdtsportals.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
