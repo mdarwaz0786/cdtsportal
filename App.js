@@ -8,6 +8,7 @@ import NoInternet from "./src/Components/Common/NoInternet.js";
 import { requestUserPermission } from "./src/Helper/notificationService.js";
 import messaging from "@react-native-firebase/messaging";
 import notifee, { AndroidImportance } from "@notifee/react-native";
+import SafeArea from "./SafeArea.jsx";
 
 const App = () => {
   const { isLoading } = useAuth();
@@ -80,7 +81,9 @@ const App = () => {
 
   return (
     <NavigationContainer>
-      {isNetworkOkay ? <DrawerNavigator /> : <NoInternet />}
+      <SafeArea>
+        {isNetworkOkay ? <DrawerNavigator /> : <NoInternet />}
+      </SafeArea>
     </NavigationContainer>
   );
 };

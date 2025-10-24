@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -133,13 +133,9 @@ const ProfileScreen = ({ navigation }) => {
               <DetailRow label="Mobile" value={team?.mobile} />
               <DetailRow label="Joining Date" value={formatDate(team?.joining)} />
               <DetailRow label="Date of Birth" value={formatDate(team?.dob)} />
-              <DetailRow label="Monthly Salary" value={`₹${team?.monthlySalary}`} />
               <DetailRow label="Working Hours/Day" value={formatTimeToHoursMinutes(team?.workingHoursPerDay)} />
               <DetailRow label="Department" value={team?.department?.name} />
               <DetailRow label="Office" value={team?.office?.name} />
-              <DetailRow label="Active" value={team?.isActive ? "Yes" : "No"} />
-              <DetailRow label="Role" value={team?.role?.name} />
-              <DetailRow label="Reporting To" value={team?.reportingTo?.map((t) => t?.name).join(", ")} />
             </View>
 
             <TouchableOpacity style={styles.editButton} onPress={toggleModal}>

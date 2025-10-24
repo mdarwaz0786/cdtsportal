@@ -70,18 +70,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
     maxWidth: "100%",
+    marginHorizontal: 10,
     alignItems: "center",
   },
   toastTitle: {
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: "500",
     color: "#fff",
     marginBottom: 5,
   },
   toastMessage: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#fff",
-    fontWeight: "500",
+    fontWeight: "400",
   },
   successToast: {
     backgroundColor: "#4caf50",
