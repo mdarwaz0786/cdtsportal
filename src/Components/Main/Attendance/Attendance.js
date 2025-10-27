@@ -82,7 +82,7 @@ const Attendance = ({ route }) => {
       };
 
       const response = await axios.get(
-        `${API_BASE_URL}/api/v1/newAttendance/monthly-newStatistic`,
+        `${API_BASE_URL}/api/v1/newAttendance/monthly-newStatistic-mobile`,
         {
           params,
           headers: {
@@ -94,6 +94,7 @@ const Attendance = ({ route }) => {
       if (response?.data?.success) {
         setAttendanceSummary(response?.data?.monthlyStatics);
         setAttendance(response?.data?.calendarData);
+        console.log("response", response?.data)
       };
     } catch (error) {
       console.log("Error:", error?.response?.data?.message);
